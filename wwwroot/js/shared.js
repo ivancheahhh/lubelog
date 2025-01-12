@@ -617,6 +617,31 @@ function printTab() {
         window.print();
     }, 500);
 }
+function printContainer(htmlData) {
+    $(".stickerPrintContainer").addClass("showOnPrint");
+    $(".stickerPrintContainer").removeClass("hideOnPrint");
+    $(".stickerPrintContainer").html(htmlData);
+    setTimeout(function () {
+        window.print();
+        setTimeout(function () {
+            $(".stickerPrintContainer").removeClass("showOnPrint");
+            $(".stickerPrintContainer").addClass("hideOnPrint");
+            $(".stickerPrintContainer").html("");
+        }, 1000);
+    }, 500);
+}
+function printTabStickers(ids, source) {
+    var vehicleId = GetVehicleId().vehicleId;
+    $.post('/Vehicle/PrintRecordStickers', {
+        vehicleId: vehicleId,
+        recordIds: ids,
+        importMode: source
+    }, function (data) {
+        if (data) {
+            printContainer(data);
+        }
+    })
+}
 function exportVehicleData(mode) {
     var vehicleId = GetVehicleId().vehicleId;
     $.get('/Vehicle/ExportFromVehicleToCsv', { vehicleId: vehicleId, mode: mode }, function (data) {
